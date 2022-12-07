@@ -33,13 +33,14 @@ PREFIX bd: <http://www.bigdata.com/rdf#>
 SELECT DISTINCT ?player_name ?country_name ?positions ?image WHERE {
   SERVICE <https://query.wikidata.org/sparql> {
     {
-select DISTINCT ?player_name ?country_name ?player_iri ?image (group_concat(distinct ?label_pos;separator=", ") as ?positions)
+select DISTINCT ?player_name ?country_name ?player_iri ?image (group_concat(distinct ?label_pos;separator=", ") as ?positions) ?followers
 where {
   ?player_iri wdt:P413 ?pos .
   ?pos rdfs:label ?label_pos .
   OPTIONAL{?player_iri wdt:P18 ?image .}
+  OPTIONAL{?player_iri wdt:P8687 ?followers .}
   FILTER (lang(?label_pos) = 'en')
-}GROUP BY ?player_name ?country_name ?player_iri ?image
+}GROUP BY ?player_name ?country_name ?player_iri ?image ?followers
     }
   }
 {SELECT DISTINCT ?player_name ?country_name ?player_iri
@@ -50,11 +51,10 @@ WHERE {
   ?root :player_iri ?player_iri
   FILTER contains(LCASE(?player_name), "%s")
 }}
-}""" % search)
+}ORDER BY DESC (xsd:integer(?followers))""" % search)
 
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    print(results)
     response['data'] = results["results"]["bindings"]
 
 
