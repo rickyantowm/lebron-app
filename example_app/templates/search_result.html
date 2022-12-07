@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Hello, world!</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="row">
+{% for i in data %}
+    <div class="col-sm-3">
+      <div class="card">
+        {% if i.image.value != None %}
+        <img class="card-img-top" src="{{i.image.value}}" alt="Player Photo" width="300" height="300">
+        {% else %}
+        <img class="card-img-top" src="https://media.discordapp.net/attachments/827827671991582730/1050115537843261581/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.png?width=656&height=656" alt="Player Photo" width="300" 
+        height="300">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{i.player_name.value}}</h5>
+          <p class="card-text">{{i.country_name.value}}</p>
+          <p class="card-text">{{i.positions.value}}</p>
+        </div>
+      </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock content %}

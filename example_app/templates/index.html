@@ -6,6 +6,11 @@
 {% endblock meta %}
 
 {% block content %}
-  <h1>Hello, world!</h1>
-  <h3>This is example app for Django template Test</h3>
+<form action="{% url 'search_result' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-group">
+    <input type="text" name="search" class="form-control" placeholder="Search your favorite player!">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 {% endblock content %}
