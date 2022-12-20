@@ -26,8 +26,8 @@
         var entity_array = entity_uri.split("/");
         player_wiki_uri = wiki_array.at(-1);
         entity_uri = entity_array.at(-1);
-        player_wiki_uri = player_wiki_uri.slice(0, player_wiki_uri.length - 1);
-        entity_uri = entity_uri.slice(0, entity_uri.length - 1);
+        player_wiki_uri = player_wiki_uri.slice(0, player_wiki_uri.length);
+        entity_uri = entity_uri.slice(0, entity_uri.length);
         window.location.href =
           url + "/player/" + player_wiki_uri + "/" + entity_uri;
       });

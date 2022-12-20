@@ -1,49 +1,49 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Search Result for {{ search }}</title>
 <script>
-      window.onload = function () {
-        var input = document.getElementById("input-box");
-        var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
-        var btnSubmit = document.getElementById("btn-submit");
-        var playerNames = [...document.getElementsByClassName("player-name")];
-        var url = window.location.href;
+  window.onload = function () {
+    var input = document.getElementById("input-box");
+    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+    var btnSubmit = document.getElementById("btn-submit");
+    var playerNames = [...document.getElementsByClassName("player-name")];
+    var url = window.location.href;
 
-        btnKeyword.forEach((btn) => {
-          btn.addEventListener("click", () => {
-            var data = btn.getAttribute("data-pk");
-            input.value = data;
-            btnSubmit.click();
-          });
+    btnKeyword.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var data = btn.getAttribute("data-pk");
+        input.value = data;
+        btnSubmit.click();
+      });
+    });
+
+    const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+    playerNames.forEach((player) => {
+      player.addEventListener("click", () => {
+        var player_wiki_uri = player.getAttribute("data-wiki");
+        var entity_uri = player.getAttribute("data-entity");
+        var data = {};
+        data["csrfmiddlewaretoken"] = csrf[0].value;
+        data["player_wiki_uri"] = player_wiki_uri;
+        data["entity_uri"] = entity_uri;
+
+        $.ajax({
+          type: "POST",
+          url: `${url}/detail`,
+          data: data,
+          success: function (response) {
+            console.log("success");
+            console.log(window.location.href);
+            window.location.href = url + "/detail";
+            console.log(window.location.href);
+          },
+          error: function (error) {
+            console.log(error);
+          },
         });
-
-        const csrf = document.getElementsByName("csrfmiddlewaretoken");
-
-        playerNames.forEach((player) => {
-          player.addEventListener("click", () => {
-            var player_wiki_uri = player.getAttribute("data-wiki");
-            var entity_uri = player.getAttribute("data-entity");
-            var data = {};
-            data["csrfmiddlewaretoken"] = csrf[0].value;
-            data["player_wiki_uri"] = player_wiki_uri
-            data["entity_uri"] = entity_uri
-
-            $.ajax({
-            type: "POST",
-            url: `${url}/detail`,
-            data: data,
-            success: function (response) {
-              console.log("success")
-              console.log(window.location.href)
-              window.location.href = url+ "/detail"
-              console.log(window.location.href)
-            },
-            error: function (error) {
-              console.log(error);
-            },
-        });
-      })
-    })
-  }
+      });
+    });
+  };
 </script>
 <style>
   .main {
@@ -115,6 +115,10 @@
     width: 30px;
     height: 30px;
   }
+
+  p {
+    margin-bottom: 7px;
+  }
 </style>
 {% endblock meta %} {% block content %}
 <header>
@@ -171,26 +175,15 @@
   </div>
 </header>
 <div class="container search-result">
-    KEREN
-    {{ data }}
-  <!-- <div style="padding: 10px 10px">Sekitar {{data | length}} hasil</div>
-  <div>
-    {% for i in data %}
-    <div class="col">
-      RESULT CARD
-      <div class="ct-card">
-        <h5
-          class="name player-name"
-          data-wiki="{{i.player_wiki_uri.value}}"
-          data-entity="{{i.entity_uri.value}}"
-        >
-          {{i.player_name.value}}
-        </h5>
-        <p class="country">Country: {{i.country_name.value}}</p>
-        <p class="team">Team: {{i.team.value}}</p>
-      </div>
+  <div style="display: flex; gap: 25px; margin-top: 20px;">
+    <div class="right">
+      <img alt="player-foto" style="width: 200px" src="{{data.image.value}}" />
     </div>
-    {% endfor %}
-  </div> -->
+    <div class="left">
+      <h5>{{data.player_name.value}}</h5>
+      <p>Country: {{data.country_name.value}}</p>
+      <p>Team: {{data.team.value}}</p>
+    </div>
+  </div>
 </div>
 {% endblock content %}

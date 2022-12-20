@@ -43,15 +43,14 @@ def get_player_detail(request, wiki_uri, entity_uri):
 
   # hard code
   response = {}
-  response['data'] = [
-    {'player_name' : { 'value': "Michael Jordan"},
+  response =  {'data' : {'player_name' : { 'value': "Michael Jordan"},
       "country_name": {"value": "Indonesia"},
       "team": {"value": "MU, Barcelona, Real Madrid"}, 
       "image" : {"value" : "https://b.fssta.com/uploads/application/nba/headshots/1120.png"},
       "wiki_uri" : {"value" : wiki_uri},
       "entity_uri" : {"value" : entity_uri}
-      }
-  ]
+      }}
+  
   print(response)
   
   return render(request, 'player_detail.html', response)
