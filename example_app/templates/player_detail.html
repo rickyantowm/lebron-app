@@ -1,49 +1,54 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Search Result for {{ search }}</title>
 <script>
-      window.onload = function () {
-        var input = document.getElementById("input-box");
-        var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
-        var btnSubmit = document.getElementById("btn-submit");
-        var playerNames = [...document.getElementsByClassName("player-name")];
-        var url = window.location.href;
+  window.onload = function () {
+    var input = document.getElementById("input-box");
+    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+    var btnSubmit = document.getElementById("btn-submit");
+    var playerNames = [...document.getElementsByClassName("player-name")];
+    var url = window.location.href;
+    var lebron = document.getElementById("lebron");
 
-        btnKeyword.forEach((btn) => {
-          btn.addEventListener("click", () => {
-            var data = btn.getAttribute("data-pk");
-            input.value = data;
-            btnSubmit.click();
-          });
+    lebron.addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:8000/";
+    });
+
+    btnKeyword.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var data = btn.getAttribute("data-pk");
+        input.value = data;
+        btnSubmit.click();
+      });
+    });
+
+    const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+    playerNames.forEach((player) => {
+      player.addEventListener("click", () => {
+        var player_wiki_uri = player.getAttribute("data-wiki");
+        var entity_uri = player.getAttribute("data-entity");
+        var data = {};
+        data["csrfmiddlewaretoken"] = csrf[0].value;
+        data["player_wiki_uri"] = player_wiki_uri;
+        data["entity_uri"] = entity_uri;
+
+        $.ajax({
+          type: "POST",
+          url: `${url}/detail`,
+          data: data,
+          success: function (response) {
+            console.log("success");
+            console.log(window.location.href);
+            window.location.href = url + "/detail";
+            console.log(window.location.href);
+          },
+          error: function (error) {
+            console.log(error);
+          },
         });
-
-        const csrf = document.getElementsByName("csrfmiddlewaretoken");
-
-        playerNames.forEach((player) => {
-          player.addEventListener("click", () => {
-            var player_wiki_uri = player.getAttribute("data-wiki");
-            var entity_uri = player.getAttribute("data-entity");
-            var data = {};
-            data["csrfmiddlewaretoken"] = csrf[0].value;
-            data["player_wiki_uri"] = player_wiki_uri
-            data["entity_uri"] = entity_uri
-
-            $.ajax({
-            type: "POST",
-            url: `${url}/detail`,
-            data: data,
-            success: function (response) {
-              console.log("success")
-              console.log(window.location.href)
-              window.location.href = url+ "/detail"
-              console.log(window.location.href)
-            },
-            error: function (error) {
-              console.log(error);
-            },
-        });
-      })
-    })
-  }
+      });
+    });
+  };
 </script>
 <style>
   .main {
@@ -115,6 +120,10 @@
     width: 30px;
     height: 30px;
   }
+
+  p {
+    margin-bottom: 7px;
+  }
 </style>
 {% endblock meta %} {% block content %}
 <header>
@@ -149,7 +158,10 @@
           </div>
         </div>
       </form>
-      <h1 style="display: flex; gap: 3px; align-items: center">
+      <h1
+        style="display: flex; cursor: pointer; gap: 3px; align-items: center"
+        id="lebron"
+      >
         <span style="color: #4385f6">L</span>
         <span style="color: #ed3f37">e</span>
         <span style="color: #f1ba17">b</span>
@@ -171,28 +183,132 @@
   </div>
 </header>
 <div class="container search-result">
-    {{ data }}
-    {{ data2 }}
-    {{ data3 }}
-    {{ data4 }}
-  <!-- <div style="padding: 10px 10px">Sekitar {{data | length}} hasil</div>
-  <div>
-    {% for i in data %}
-    <div class="col">
-      RESULT CARD
-      <div class="ct-card">
-        <h5
-          class="name player-name"
-          data-wiki="{{i.player_wiki_uri.value}}"
-          data-entity="{{i.entity_uri.value}}"
-        >
-          {{i.player_name.value}}
-        </h5>
-        <p class="country">Country: {{i.country_name.value}}</p>
-        <p class="team">Team: {{i.team.value}}</p>
-      </div>
+  <div style="display: flex; gap: 25px; margin-top: 20px">
+    <div class="right">
+      {% if data2.0.image.value|length > 0 %}
+      <img
+        alt="player-foto"
+        style="
+          width: 200px;
+          height: 250px;
+          object-fit: cover;
+          border-radius: 0.7em;
+          box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.1);
+        "
+        src="{{data2.0.image.value}}"
+      />
+      {% else %}
+      <img
+        alt="player-foto"
+        style="
+          width: 200px;
+          height: 250px;
+          object-fit: cover;
+          border-radius: 0.7em;
+          box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.1);
+        "
+        src="https://media.discordapp.net/attachments/827827671991582730/1050115537843261581/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.png?width=656&height=656"
+      />
+      {% endif %}
     </div>
-    {% endfor %}
-  </div> -->
+    <div class="left">
+      {% if data2|length > 0 %}
+      <div>
+        <h5>{{data4.0.player_name.value}}</h5>
+        {% if data2.0.nickname.value|length > 0%}
+        <p>Nickname: {{data2.0.nickname.value}}</p>
+        {% endif%} {% if data2.0.positions.value|length > 0%}
+        <p>Position: {{data2.0.positions.value}}</p>
+        {% endif%} {% if data2.0.jersey_number.value|length > 0 %}
+        <p>Jersey Number: {{data2.0.jersey_number.value}}</p>
+        {% endif%} {% if data4.0.college_name.value|length > 0%}
+        <p>
+          College:
+          <a
+            style="font-weight: 600; text-decoration: none"
+            href="{{data4.0.college_iri.value}}"
+            >{{data4.0.college_name.value}}</a
+          >
+        </p>
+        {% endif%} {% if data4.0.draft_number.value|length > 0 %}
+        <p>Draft Number: {{data4.0.draft_number.value}}</p>
+        {% endif%} {% if data4.0.draft_round.value|length > 0 %}
+        <p>Draft Round: {{data4.0.draft_round.value}}</p>
+        {% endif%} {% if data4.0.draft_year.value|length > 0 %}
+        <p>Draft Year: {{data4.0.draft_year.value}}</p>
+        {% endif%}
+      </div>
+      {% else %}
+      <h5>Player's Data Not Found</h5>
+      {% endif %}
+    </div>
+  </div>
+  {% if data|length != 0 %}
+  <div style="margin-top: 50px" class="table-responsive">
+    <h5 style="margin-bottom: 20px">Player's Stats</h5>
+    <table class="table table-striped table-bordered">
+      <thead class="table-light align-middle">
+        <tr>
+          <th scope="col">Season Name</th>
+          <th scope="col">Age</th>
+          <th scope="col">Team Name</th>
+          <th scope="col">GP</th>
+          <th scope="col">Height</th>
+          <th scope="col">Weight</th>
+          <th scope="col">Net Rat</th>
+          <th scope="col">Ts Pct</th>
+          <th scope="col">Usg Pct</th>
+          <th scope="col">Dreb Pct</th>
+          <th scope="col">Oreb Pct</th>
+          <th scope="col">Reb</th>
+          <th scope="col">Ast Pct</th>
+          <th scope="col">Ast</th>
+          <th scope="col">pts</th>
+        </tr>
+      </thead>
+      <tbody class="align-middle">
+        {% for i in data %}
+        <tr>
+          <td>{{i.season_name.value}}</td>
+          <td>{{i.age.value }}</td>
+          <td>{{i.team_name.value}}</td>
+          <td>{{i.gp.value | floatformat:2 }}</td>
+          <td>{{i.height.value}}</td>
+          <td>{{i.weight.value | floatformat:2 }}</td>
+          <td>{{i.net_rating.value | floatformat:2 }}</td>
+          <td>{{i.ts_pct.value | floatformat:2 }}</td>
+          <td>{{i.usg_pct.value | floatformat:2 }}</td>
+          <td>{{i.dreb_pct.value | floatformat:2 }}</td>
+          <td>{{i.oreb_pct.value | floatformat:2 }}</td>
+          <td>{{i.reb.value }}</td>
+          <td>{{i.ast_pct.value | floatformat:2 }}</td>
+          <td>{{i.ast.value | floatformat:2 }}</td>
+          <td>{{i.pts.value }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %} {% if data3|length != 0 %}
+  <div style="margin-top: 50px" class="table-responsive">
+    <h5 style="margin-bottom: 20px">Player's Awards</h5>
+    <table class="table table-striped table-bordered">
+      <thead class="table-light align-middle">
+        <tr>
+          <th scope="col">Awards Name</th>
+          <th scope="col">Year</th>
+        </tr>
+      </thead>
+      <tbody class="align-middle">
+        {% for i in data3 %}
+        <tr>
+          <td>{{ i.award_name.value}}</td>
+          <td>{{ i.years.value }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 </div>
 {% endblock content %}
