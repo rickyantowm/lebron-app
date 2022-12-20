@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 namespace = "kb"
@@ -34,9 +34,23 @@ WHERE{
     response['data'] = results["results"]["bindings"]
     return render(request, 'search_result.html', response)
 
-def get_player_detail(request):
-  print(request)
+def get_player_detail(request, wiki_uri, entity_uri):
   data = dict(request.POST)
-  print(data)
 
-  return render(request, 'search_result.html', {})
+  # uri wiki dan entity riil
+  wiki_uri = "<http://www.wikidata.org/entity/" + wiki_uri + ">"
+  entity_uri = "http://127.0.0.1:8000/rdf-data/" + entity_uri + ">"
+
+  # hard code
+  response = {}
+  response['data'] = [
+    {'player_name' : { 'value': "Michael Jordan"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 
+      "image" : {"value" : "https://b.fssta.com/uploads/application/nba/headshots/1120.png"},
+      "wiki_uri" : {"value" : wiki_uri},
+      "entity_uri" : {"value" : entity_uri}
+      }
+  ]
+  
+  return render(request, 'player_detail.html', response)
