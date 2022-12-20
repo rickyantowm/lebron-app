@@ -56,12 +56,7 @@ WHERE {
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
     response['data'] = results["results"]["bindings"]
-    response['search'] = search
-
-    print(search)
-    print(response['data'])
     print(results)
-
 
     return render(request, 'search_result.html', response)
 
