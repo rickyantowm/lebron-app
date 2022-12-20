@@ -1,19 +1,46 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Search Result for {{ search }}</title>
 <script>
-  window.onload = function () {
-    var input = document.getElementById("input-box");
-    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
-    var btnSubmit = document.getElementById("btn-submit");
+      window.onload = function () {
+        var input = document.getElementById("input-box");
+        var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+        var btnSubmit = document.getElementById("btn-submit");
+        var playerNames = [...document.getElementsByClassName("player-name")];
+        var url = window.location.href;
 
-    btnKeyword.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        data = btn.getAttribute("data-pk");
-        input.value = data;
-        btnSubmit.click();
-      });
-    });
-  };
+        btnKeyword.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            var data = btn.getAttribute("data-pk");
+            input.value = data;
+            btnSubmit.click();
+          });
+        });
+
+        const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+        playerNames.forEach((player) => {
+          player.addEventListener("click", () => {
+            var player_wiki_uri = player.getAttribute("data-wiki");
+            var entity_uri = player.getAttribute("data-entity");
+            var data = {};
+            data["csrfmiddlewaretoken"] = csrf[0].value;
+            data["player_wiki_uri"] = player_wiki_uri
+            data["entity_uri"] = entity_uri
+
+            $.ajax({
+            type: "POST",
+            url: `${url}/detail`,
+            data: data,
+            success: function (response) {
+              console.log("success")
+            },
+            error: function (error) {
+              console.log(error);
+            },
+        });
+      })
+    })
+  }
 </script>
 <style>
   .main {
@@ -94,9 +121,25 @@
 
   .ct-card {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
+    padding: 0px 10px;
+    margin-bottom: 25px;
+  }
+
+  .ct-card .name {
+    color: #4385f6;
+    cursor: pointer;
+  }
+
+  .ct-card p {
+    font-size: 1.1em;
+    margin: 0px;
+  }
+
+  .form img {
+    border-radius: 0.7em;
   }
 </style>
 {% endblock meta %} {% block content %}
@@ -157,38 +200,18 @@
   <div style="padding: 10px 10px">Sekitar {{data | length}} hasil</div>
   <div>
     {% for i in data %}
-    <div class="col-sm-3">
+    <div class="col">
       <!-- RESULT CARD -->
       <div class="ct-card">
-        <div class="right">
-          <div class="">
-            <h5 class="">{{i.player_name.value}}</h5>
-            <p class="">{{i.country_name.value}}</p>
-            <p class="">{{i.positions.value}}</p>
-          </div>
-        </div>
-        <div class="foto">
-          {% if i.image.value != None %}
-          <img
-            class=""
-            src="{{i.image.value}}"
-            alt="Player Photo"
-            width="300"
-            height="300"
-            {%
-            else
-            %}
-          />
-          {% else %}
-          <img
-            class=""
-            src="https://media.discordapp.net/attachments/827827671991582730/1050115537843261581/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.png?width=656&height=656"
-            alt="Player Photo"
-            width="300"
-            height="300"
-          />
-          {% endif %}
-        </div>
+        <h5
+          class="name player-name"
+          data-wiki="{{i.player_wiki_uri.value}}"
+          data-entity="{{i.entity_uri.value}}"
+        >
+          {{i.player_name.value}}
+        </h5>
+        <p class="country">Country: {{i.country_name.value}}</p>
+        <p class="team">Team: {{i.team.value}}</p>
       </div>
     </div>
     {% empty %}

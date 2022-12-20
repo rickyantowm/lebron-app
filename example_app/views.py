@@ -57,6 +57,19 @@ WHERE {
     results = sparql.query().convert()
     response['data'] = results["results"]["bindings"]
     response['search'] = search
+    response['data'] = [{'player_name' : { 'value': "Michael Jordan"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 'player_wiki_uri' : {'value': '<http://www.wikidata.org/entity/Q3714043>'}, 'entity_uri': {'value': '<http://127.0.0.1:8000/rdf-data/Dontonio+Wingfield>'}},
+      {'player_name' : { 'value': "Messi"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 'player_wiki_uri' : {'value': '<http://www.wikidata.org/entity/Q3714043>'}, 'entity_uri': {'value': '<http://127.0.0.1:8000/rdf-data/Dontonio+Wingfield>'}},
+      {'player_name' : { 'value': "Ronaldo"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 'player_wiki_uri' : {'value': '<http://www.wikidata.org/entity/Q3714043>'}, 'entity_uri': {'value': '<http://127.0.0.1:8000/rdf-data/Dontonio+Wingfield>'}},
+      {'player_name' : { 'value': "Neymar"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 'player_wiki_uri' : {'value': '<http://www.wikidata.org/entity/Q3714043>'}, 'entity_uri': {'value': '<http://127.0.0.1:8000/rdf-data/Dontonio+Wingfield>'}}
+    ]
 
     print(search)
     print(response['data'])
@@ -65,10 +78,9 @@ WHERE {
 
     return render(request, 'search_result.html', response)
 
+def get_player_detail(request):
+  print(request)
+  data = dict(request.POST)
+  print(data)
 
-
-# response['data'] = [{ 'player_name' : { 'value': "Keren"},
-#       "country_name": {"value": "Keren"},
-#       "positions": {"value": "Keren"},
-#       "image": { "value": "https://media.discordapp.net/attachments/876950446479126529/1054665731763077170/075474300_1599984513-LA_Lakers_Vs_Houston_Rockets_01-removebg-preview.png?width=303&height=30"}}
-#     ]
+  return render(request, 'search_result.html', {})
