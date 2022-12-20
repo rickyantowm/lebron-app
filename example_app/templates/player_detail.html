@@ -1,0 +1,198 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Search Result for {{ search }}</title>
+<script>
+      window.onload = function () {
+        var input = document.getElementById("input-box");
+        var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+        var btnSubmit = document.getElementById("btn-submit");
+        var playerNames = [...document.getElementsByClassName("player-name")];
+        var url = window.location.href;
+
+        btnKeyword.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            var data = btn.getAttribute("data-pk");
+            input.value = data;
+            btnSubmit.click();
+          });
+        });
+
+        const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+        playerNames.forEach((player) => {
+          player.addEventListener("click", () => {
+            var player_wiki_uri = player.getAttribute("data-wiki");
+            var entity_uri = player.getAttribute("data-entity");
+            var data = {};
+            data["csrfmiddlewaretoken"] = csrf[0].value;
+            data["player_wiki_uri"] = player_wiki_uri
+            data["entity_uri"] = entity_uri
+
+            $.ajax({
+            type: "POST",
+            url: `${url}/detail`,
+            data: data,
+            success: function (response) {
+              console.log("success")
+              console.log(window.location.href)
+              window.location.href = url+ "/detail"
+              console.log(window.location.href)
+            },
+            error: function (error) {
+              console.log(error);
+            },
+        });
+      })
+    })
+  }
+</script>
+<style>
+  .main {
+    width: 100%;
+  }
+
+  header {
+    border-bottom: 0.1px solid #ced4da;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 115px;
+    justify-content: center;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    gap: 3em;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-group,
+  .btn-group {
+    width: 100%;
+    height: 45px;
+  }
+
+  .form-group {
+    border-radius: 1em;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-group:hover {
+    box-shadow: 0 0 6px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control {
+    border-radius: 0;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    border-right: none;
+  }
+
+  .form-control:active,
+  .form-control:focus {
+    border-color: #ced4da;
+  }
+
+  .btn-submit {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: transparent;
+    border-color: #ced4da !important;
+    border-left: none;
+  }
+
+  .btn-submit:hover {
+    background-color: transparent !important;
+  }
+
+  .btn-submit img {
+    width: 30px;
+    height: 30px;
+  }
+</style>
+{% endblock meta %} {% block content %}
+<header>
+  <div class="container">
+    <div class="header">
+      <form action="{% url 'search_result' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic outlined example"
+          >
+            <input
+              type="text"
+              name="search"
+              class="form-control shadow-none"
+              placeholder="Search your favorite player!"
+              id="input-box"
+              value="{{search}}"
+            />
+            <button
+              id="btn-submit"
+              type="submit"
+              class="btn btn-primary btn-submit"
+            >
+              <img
+                src="https://media.discordapp.net/attachments/876950446479126529/1054644214333460510/loupe_1.png?width=51&height=51"
+                alt="search-icon"
+              />
+            </button>
+          </div>
+        </div>
+      </form>
+      <h1 style="display: flex; gap: 3px; align-items: center">
+        <span style="color: #4385f6">L</span>
+        <span style="color: #ed3f37">e</span>
+        <span style="color: #f1ba17">b</span>
+        <span style="color: #34a855">r</span>
+        <span>
+          <img
+            src="https://media.discordapp.net/attachments/876950446479126529/1054645127873826896/S__20004900-removebg-preview-1.png?width=256&height=431"
+            alt="Player Photo"
+            height="50px"
+        /></span>
+        <span style="color: #ed3f37">n</span>
+      </h1>
+    </div>
+    <div style="padding: 0 10px">
+      <p style="border-bottom: 2.5px solid #4385f6; width: fit-content">
+        Semua
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container search-result">
+    {{ data }}
+    {{ data2 }}
+    {{ data3 }}
+    {{ data4 }}
+  <!-- <div style="padding: 10px 10px">Sekitar {{data | length}} hasil</div>
+  <div>
+    {% for i in data %}
+    <div class="col">
+      RESULT CARD
+      <div class="ct-card">
+        <h5
+          class="name player-name"
+          data-wiki="{{i.player_wiki_uri.value}}"
+          data-entity="{{i.entity_uri.value}}"
+        >
+          {{i.player_name.value}}
+        </h5>
+        <p class="country">Country: {{i.country_name.value}}</p>
+        <p class="team">Team: {{i.team.value}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div> -->
+</div>
+{% endblock content %}

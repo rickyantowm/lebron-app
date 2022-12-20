@@ -1,17 +1,123 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block meta %}
+{% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Hello, world!</title>
-{% endblock meta %}
+<style>
+  h1 {
+    font-size: 4.5em;
+  }
 
-{% block content %}
-<img src="https://media.discordapp.net/attachments/827827671991582730/1050122542351912960/26-263888_lebron-james-head-png-lebron-james-face-png.png?width=561&height=655" alt="Player Photo" width="300" height="300">
-<form action="{% url 'search_result' %}" method="POST">
-  {% csrf_token %}
-  <div class="form-group">
-    <input type="text" name="search" class="form-control" placeholder="Search your favorite player!">
+  .main {
+    height: 100vh;
+  }
+
+  .content {
+    height: calc(100% - 40px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+    margin: auto;
+    background-color: #4385f6CC;
+    border-top-left-radius: 3em;
+    border-top-right-radius: 3em;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  form {
+    width: 450px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-group,
+  .btn-group {
+    width: 100%;
+    height: 45px;
+  }
+
+  .form-group {
+    border-radius: 1em;
+  }
+
+  .form-group:hover {
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control {
+    border-radius: 0;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    border-right: none;
+  }
+
+  .form-control:active,
+  .form-control:focus {
+    border-color: #ced4da;
+  }
+
+  .btn-submit {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: transparent;
+    border-color: #ced4da !important;
+    border-left: none;
+  }
+
+  .btn-submit:hover {
+    background-color: transparent !important;
+  }
+
+  .btn-submit img {
+    width: 30px;
+    height: 30px;
+  }
+</style>
+{% endblock meta %} {% block content %}
+<div class="main">
+  <div class="content">
+    <h1 style="display: flex; gap: 3px; align-items: center">
+      <span style="color: #4385f6">L</span>
+      <span style="color: #ed3f37">e</span>
+      <span style="color: #f1ba17">b</span>
+      <span style="color: #34a855">r</span>
+      <span>
+        <img
+          src="https://media.discordapp.net/attachments/876950446479126529/1054645127873826896/S__20004900-removebg-preview-1.png?width=256&height=431"
+          alt="Player Photo"
+          height="100px"
+      /></span>
+      <span style="color: #ed3f37">n</span>
+    </h1>
+    <form action="{% url 'search_result' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+          <input
+            type="text"
+            name="search"
+            class="form-control shadow-none"
+            placeholder="Search your favorite player!"
+          />
+          <button type="submit" class="btn btn-primary btn-submit">
+            <img
+              src="https://media.discordapp.net/attachments/876950446479126529/1054644214333460510/loupe_1.png?width=51&height=51"
+              alt="search-icon"
+            />
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  <footer>Made with Love</footer>
+</div>
 {% endblock content %}

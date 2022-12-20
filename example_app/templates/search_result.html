@@ -1,28 +1,313 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Search Result for {{ search }}</title>
+<script>
+  window.onload = function () {
+    var input = document.getElementById("input-box");
+    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+    var btnSubmit = document.getElementById("btn-submit");
+    var playerNames = [...document.getElementsByClassName("player-name")];
+    var url = window.location.href;
 
-{% block meta %}
-<title>Hello, world!</title>
-{% endblock meta %}
+    btnKeyword.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var data = btn.getAttribute("data-pk");
+        input.value = data;
+        btnSubmit.click();
+      });
+    });
 
-{% block content %}
-<div class="row">
-{% for i in data %}
-    <div class="col-sm-3">
-      <div class="card">
-        {% if i.image.value != None %}
-        <img class="card-img-top" src="{{i.image.value}}" alt="Player Photo" width="300" height="300">
-        {% else %}
-        <img class="card-img-top" src="https://media.discordapp.net/attachments/827827671991582730/1050115537843261581/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.png?width=656&height=656" alt="Player Photo" width="300" 
-        height="300">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{i.player_name.value}}</h5>
-          <p class="card-text">{{i.country_name.value}}</p>
-          <p class="card-text">{{i.positions.value}}</p>
+    const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+    playerNames.forEach((player) => {
+      player.addEventListener("click", () => {
+        var player_wiki_uri = player.getAttribute("data-wiki");
+        var entity_uri = player.getAttribute("data-entity");
+        var wiki_array = player_wiki_uri.split("/");
+        var entity_array = entity_uri.split("/");
+        player_wiki_uri = wiki_array.at(-1);
+        entity_uri = entity_array.at(-1);
+        player_wiki_uri = player_wiki_uri.slice(0, player_wiki_uri.length);
+        entity_uri = entity_uri.slice(0, entity_uri.length);
+        window.location.href =
+          url + "/player/" + player_wiki_uri + "/" + entity_uri;
+      });
+    });
+  };
+</script>
+<style>
+  .main {
+    width: 100%;
+  }
+
+  header {
+    border-bottom: 0.1px solid #ced4da;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 115px;
+    justify-content: center;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    gap: 3em;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-group,
+  .btn-group {
+    width: 100%;
+    height: 45px;
+  }
+
+  .form-group {
+    border-radius: 1em;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-group:hover {
+    box-shadow: 0 0 6px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control {
+    border-radius: 0;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    border-right: none;
+  }
+
+  .form-control:active,
+  .form-control:focus {
+    border-color: #ced4da;
+  }
+
+  .btn-submit {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: transparent;
+    border-color: #ced4da !important;
+    border-left: none;
+  }
+
+  .btn-submit:hover {
+    background-color: transparent !important;
+  }
+
+  .btn-submit img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .search-keyword {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .ct-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0px 10px;
+    margin-bottom: 25px;
+  }
+
+  .ct-card .name {
+    color: #4385f6;
+    cursor: pointer;
+  }
+
+  .ct-card p {
+    font-size: 1.1em;
+    margin: 0px;
+  }
+
+  .form img {
+    border-radius: 0.7em;
+  }
+</style>
+{% endblock meta %} {% block content %}
+<header>
+  <div class="container">
+    <div class="header">
+      <form action="{% url 'search_result' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic outlined example"
+          >
+            <input
+              type="text"
+              name="search"
+              class="form-control shadow-none"
+              placeholder="Search your favorite player!"
+              id="input-box"
+              value="{{search}}"
+            />
+            <button
+              id="btn-submit"
+              type="submit"
+              class="btn btn-primary btn-submit"
+            >
+              <img
+                src="https://media.discordapp.net/attachments/876950446479126529/1054644214333460510/loupe_1.png?width=51&height=51"
+                alt="search-icon"
+              />
+            </button>
+          </div>
+        </div>
+      </form>
+      <h1 style="display: flex; gap: 3px; align-items: center">
+        <span style="color: #4385f6">L</span>
+        <span style="color: #ed3f37">e</span>
+        <span style="color: #f1ba17">b</span>
+        <span style="color: #34a855">r</span>
+        <span>
+          <img
+            src="https://media.discordapp.net/attachments/876950446479126529/1054645127873826896/S__20004900-removebg-preview-1.png?width=256&height=431"
+            alt="Player Photo"
+            height="50px"
+        /></span>
+        <span style="color: #ed3f37">n</span>
+      </h1>
+    </div>
+    <div style="padding: 0 10px">
+      <p style="border-bottom: 2.5px solid #4385f6; width: fit-content">
+        Semua
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container search-result">
+  <div style="padding: 10px 10px">Sekitar {{data | length}} hasil</div>
+  <div>
+    {% for i in data %}
+    <div class="col">
+      <!-- RESULT CARD -->
+      <div class="ct-card">
+        <h5
+          class="name player-name"
+          data-wiki="{{i.player_wiki_uri.value}}"
+          data-entity="{{i.entity_uri.value}}"
+        >
+          {{i.player_name.value}}
+        </h5>
+        <p class="country">Country: {{i.country_name.value}}</p>
+        <p class="team">Teams: {{i.teams.value}}</p>
+      </div>
+    </div>
+    {% empty %}
+    <!-- NOT FOUND KEYWORD -->
+    <div style="padding: 0 10px; display: flex; gap: 15px">
+      <div>
+        <img
+          src="https://media.discordapp.net/attachments/876950446479126529/1054665731763077170/075474300_1599984513-LA_Lakers_Vs_Houston_Rockets_01-removebg-preview.png?width=303&height=303"
+          alt="lebron"
+          style="width: 150px; height: 150px; border-radius: 0.8em"
+        />
+      </div>
+      <div>
+        <p style="font-size: 1.7em; font-weight: 400">
+          Penelusuran Anda,
+          <span style="font-weight: 600">"{{ search }}",</span> tidak cocok
+          dengan hasil apa pun
+        </p>
+        <p>
+          <span style="font-weight: 700">Perlu Bantuan? </span>Lihat
+          <span
+            style="
+              text-decoration: none;
+              padding: 0;
+              margin: 0;
+              border: none;
+              color: #4385f6;
+              cursor: pointer;
+            "
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            tips lainnya
+          </span>
+          untuk melakukan penbelusuran di Lebron
+        </p>
+        <p>Beberapa contoh keyword untuk anda telusuri</p>
+        <div class="search-keyword">
+          {%for x in similar%}
+          <a
+            class="btn btn-keyword"
+            {%for j in x%}
+            data-pk="{{j}}"
+            {% endfor %}
+            style="background-color: #00000022; border-radius: 0.6em"
+            >{{x}}</a
+          >
+          {% endfor %}
         </div>
       </div>
     </div>
-{% endfor %}
+    {% endfor %}
+  </div>
+</div>
+<!-- MODAL -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Tips Penelusuran
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 1.2em; font-weight: 500">
+          Cara melakukan penelusuran di Google Pelajari beberapa tips dan trik
+          untuk membantu Anda menemukan informasi di Google dengan mudah.
+        </p>
+        <p>
+          <span style="font-weight: 600">Tips 1: </span>Mulai dari
+          dasar-dasarnya Apa pun yang Anda cari, mulailah dengan penelusuran
+          sederhana seperti LeBronJames?.
+        </p>
+        <p>
+          <span style="font-weight: 600">Tips 2: </span>Pilih kata-kata dengan
+          cermat Saat Anda memutuskan kata-kata yang akan dimasukkan ke kotak
+          penelusuran, coba pilih kata yang kemungkinan muncul di situs yang
+          Anda cari.
+        </p>
+        <p>
+          <span style="font-weight: 600">Tips 3: </span>Khawatirkan lah hal
+          kecil seperti Ejaan: Pemeriksa ejaan Lebron tidak secara otomatis
+          menggunakan ejaan yang umum. Patikan anda tidak typo atau salah
+          mengetikkan keyword pada search bar
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
