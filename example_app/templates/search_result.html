@@ -250,30 +250,16 @@
         </p>
         <p>Beberapa contoh keyword untuk anda telusuri</p>
         <div class="search-keyword">
+          {%for x in similar%}
           <a
             class="btn btn-keyword"
-            data-pk="LeBron James"
+            {%for j in x%}
+            data-pk="{{j}}"
+            {% endfor %}
             style="background-color: #00000022; border-radius: 0.6em"
-            >LeBron James</a
+            >{{x}}</a
           >
-          <a
-            class="btn btn-keyword"
-            data-pk="Michael Jordan"
-            style="background-color: #00000022; border-radius: 0.6em"
-            >Michael Jordan</a
-          >
-          <a
-            class="btn btn-keyword"
-            data-pk="Kobe Bryant"
-            style="background-color: #00000022; border-radius: 0.6em"
-            >Kobe Bryant</a
-          >
-          <a
-            class="btn btn-keyword"
-            data-pk="Magic Johnson"
-            style="background-color: #00000022; border-radius: 0.6em"
-            >Magic Johnson</a
-          >
+          {% endfor %}
         </div>
       </div>
     </div>
