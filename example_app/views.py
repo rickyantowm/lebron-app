@@ -15,19 +15,19 @@ def search_result(request):
 prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> 
 
-SELECT DISTINCT ?root ?player_name ?country_name ?player_iri (group_concat(distinct ?team_name;separator=", ") as ?teams)
+SELECT DISTINCT ?entity_uri ?player_name ?country_name ?player_wiki_uri (group_concat(distinct ?team_name;separator=", ") as ?teams)
 WHERE{
-    ?root rdfs:label ?player_name .
+    ?entity_uri rdfs:label ?player_name .
     FILTER contains(LCASE(?player_name),"%s")
-    ?root :season ?seasons .
+    ?entity_uri :season ?seasons .
 	?seasons :hasTeam ?team .
     ?team rdfs:label ?team_name .
- 	?root :country ?country .
+ 	?entity_uri :country ?country .
     ?country rdfs:label ?country_name .
-  	?root :player_iri ?player_iri
+  	?entity_uri :player_iri ?player_wiki_uri
   	
     FILTER(strlen(?team_name) > 3)
-}GROUP BY ?root ?player_name ?country_name ?player_iri""" % search)
+}GROUP BY ?entity_uri ?player_name ?country_name ?player_wiki_uri""" % search)
 
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -52,5 +52,6 @@ def get_player_detail(request, wiki_uri, entity_uri):
       "entity_uri" : {"value" : entity_uri}
       }
   ]
+  print(response)
   
   return render(request, 'player_detail.html', response)
