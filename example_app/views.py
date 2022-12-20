@@ -44,7 +44,7 @@ def get_player_detail(request, wiki_uri, entity_uri):
   sparql.setQuery("""prefix :      <http://127.0.0.1:8000/rdf-data/> 
 prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>  
 
-SELECT DISTINCT ?season_name ?age ?team_name ?gp ?height ?weight ?net_rating ?ts_pct ?usg_pct ?dreb_pct ?oreb_pct ?reb ?ast_pct ?ast ?pts
+SELECT DISTINCT ?season_name ?age ?team_name ?team_iri ?gp ?height ?weight ?net_rating ?ts_pct ?usg_pct ?dreb_pct ?oreb_pct ?reb ?ast_pct ?ast ?pts
 WHERE{
     %s :season ?seasons .
   	?seasons :hasSeason ?season_name .
@@ -59,6 +59,7 @@ WHERE{
     ?seasons :hasPts ?pts .
     ?seasons :hasReb ?reb .
     ?seasons :hasTeam ?team .
+    ?team :teamIri ?team_iri .
     ?team rdfs:label ?team_name .
     ?seasons :hasTs_pct ?ts_pct .
     ?seasons :hasUsg_pct ?usg_pct .
@@ -123,5 +124,26 @@ ORDER BY DESC(?year)
 
   results = sparql.query().convert()
   response['data3'] = results["results"]["bindings"]
+
+  sparql.setQuery("""prefix :      <http://127.0.0.1:8000/rdf-data/> 
+prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>  
+
+SELECT DISTINCT ?player_name ?college_name ?college_iri ?draft_number ?draft_round ?draft_year
+WHERE{
+    %s rdfs:label ?player_name ;
+                                                    :draft_number ?draft_number;
+                                                    :draft_round ?draft_round ;
+                                                    :draft_year ?draft_year .
+    OPTIONAL{%s :college ?college .
+    ?college rdfs:label ?college_name .
+    ?college :college_iri ?college_iri .}
+}
+LIMIT 1""" % (entity_uri, entity_uri))
+
+  results = sparql.query().convert()
+  response['data4'] = results["results"]["bindings"]
+
+
+
   
   return render(request, 'player_detail.html', response)
