@@ -1,5 +1,14 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Hello, world!</title>
+<script>
+  window.onload = function () {
+    var lebron = document.getElementById("lebron");
+
+    lebron.addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:8000/";
+    });
+  };
+</script>
 <style>
   h1 {
     font-size: 4.5em;
@@ -26,7 +35,7 @@
     height: 40px;
     width: 100%;
     margin: auto;
-    background-color: #4385f6CC;
+    background-color: #4385f6cc;
     border-top-left-radius: 3em;
     border-top-right-radius: 3em;
     font-weight: 600;
@@ -85,7 +94,10 @@
 {% endblock meta %} {% block content %}
 <div class="main">
   <div class="content">
-    <h1 style="display: flex; gap: 3px; align-items: center">
+    <h1
+      style="display: flex; cursor: pointer; gap: 3px; align-items: center"
+      id="lebron"
+    >
       <span style="color: #4385f6">L</span>
       <span style="color: #ed3f37">e</span>
       <span style="color: #f1ba17">b</span>

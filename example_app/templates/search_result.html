@@ -7,6 +7,11 @@
     var btnSubmit = document.getElementById("btn-submit");
     var playerNames = [...document.getElementsByClassName("player-name")];
     var url = window.location.href;
+    var lebron = document.getElementById("lebron");
+
+    lebron.addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:8000/";
+    });
 
     btnKeyword.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -167,7 +172,10 @@
           </div>
         </div>
       </form>
-      <h1 style="display: flex; gap: 3px; align-items: center">
+      <h1
+        style="display: flex; cursor: pointer; gap: 3px; align-items: center"
+        id="lebron"
+      >
         <span style="color: #4385f6">L</span>
         <span style="color: #ed3f37">e</span>
         <span style="color: #f1ba17">b</span>
