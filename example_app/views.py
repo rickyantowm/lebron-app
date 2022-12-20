@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from SPARQLWrapper import SPARQLWrapper, JSON
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 namespace = "kb"
 sparql = SPARQLWrapper("http://localhost:9999/blazegraph/namespace/"+ namespace + "/sparql")
@@ -34,6 +36,31 @@ WHERE{
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
     response['data'] = results["results"]["bindings"]
+    if response['data'] == []:
+      sparql.setQuery("""prefix :      <http://127.0.0.1:8000/rdf-data/> 
+prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>  
+prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+
+SELECT DISTINCT ?player_name 
+WHERE{
+    ?player rdf:type :BasketballPlayer .
+    ?player rdfs:label ?player_name .
+}
+""")
+      results2 = sparql.query().convert()
+      dat = results2["results"]["bindings"]
+      aa = {}
+      for i in range(len(dat)):
+        ratio = fuzz.ratio(search, dat[i]["player_name"]["value"].lower())
+        if ratio >= 50:
+          aa[dat[i]["player_name"]["value"]] = ratio
+  
+      sorted_aa = sorted(aa.items(), key=lambda x:x[1], reverse=True)
+      if len(sorted_aa) > 5:
+        sorted_aa = sorted_aa[0:5]
+      response['similar'] = sorted_aa
+      
+    response['search'] = request.POST['search']
     return render(request, 'search_result.html', response)
 
 def get_player_detail(request, wiki_uri, entity_uri):
@@ -142,8 +169,5 @@ LIMIT 1""" % (entity_uri, entity_uri))
 
   results = sparql.query().convert()
   response['data4'] = results["results"]["bindings"]
-
-
-
   
   return render(request, 'player_detail.html', response)
