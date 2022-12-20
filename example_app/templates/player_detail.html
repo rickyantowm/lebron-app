@@ -249,21 +249,21 @@
     <table class="table table-striped table-bordered">
       <thead class="table-light align-middle">
         <tr>
-          <th scope="col">Season Name</th>
+          <th scope="col">Season</th>
           <th scope="col">Age</th>
           <th scope="col">Team Name</th>
           <th scope="col">GP</th>
           <th scope="col">Height</th>
           <th scope="col">Weight</th>
-          <th scope="col">Net Rat</th>
-          <th scope="col">Ts Pct</th>
-          <th scope="col">Usg Pct</th>
-          <th scope="col">Dreb Pct</th>
-          <th scope="col">Oreb Pct</th>
-          <th scope="col">Reb</th>
-          <th scope="col">Ast Pct</th>
-          <th scope="col">Ast</th>
-          <th scope="col">pts</th>
+          <th scope="col">NETRTG</th>
+          <th scope="col">TS%</th>
+          <th scope="col">USG%</th>
+          <th scope="col">DREB%</th>
+          <th scope="col">OREB%</th>
+          <th scope="col">REB</th>
+          <th scope="col">AST%</th>
+          <th scope="col">AST</th>
+          <th scope="col">PTS</th>
         </tr>
       </thead>
       <tbody class="align-middle">
@@ -272,17 +272,17 @@
           <td>{{i.season_name.value}}</td>
           <td>{{i.age.value }}</td>
           <td>{{i.team_name.value}}</td>
-          <td>{{i.gp.value | floatformat:2 }}</td>
-          <td>{{i.height.value}}</td>
+          <td>{{i.gp.value}}</td>
+          <td>{{i.height.value | floatformat:2 }}</td>
           <td>{{i.weight.value | floatformat:2 }}</td>
-          <td>{{i.net_rating.value | floatformat:2 }}</td>
-          <td>{{i.ts_pct.value | floatformat:2 }}</td>
-          <td>{{i.usg_pct.value | floatformat:2 }}</td>
-          <td>{{i.dreb_pct.value | floatformat:2 }}</td>
-          <td>{{i.oreb_pct.value | floatformat:2 }}</td>
-          <td>{{i.reb.value }}</td>
-          <td>{{i.ast_pct.value | floatformat:2 }}</td>
-          <td>{{i.ast.value | floatformat:2 }}</td>
+          <td>{{i.net_rating.value | floatformat:1 }}</td>
+          <td>{{i.ts_pct.value | floatformat:3 }}</td>
+          <td>{{i.usg_pct.value | floatformat:3}}</td>
+          <td>{{i.dreb_pct.value | floatformat:3 }}</td>
+          <td>{{i.oreb_pct.value | floatformat:3 }}</td>
+          <td>{{i.reb.value | floatformat:1}}</td>
+          <td>{{i.ast_pct.value | floatformat:3 }}</td>
+          <td>{{i.ast.value | floatformat:1 }}</td>
           <td>{{i.pts.value }}</td>
         </tr>
         {% endfor %}
