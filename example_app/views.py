@@ -60,10 +60,9 @@ WHERE {
 
     return render(request, 'search_result.html', response)
 
+def get_player_detail(request):
+  print(request)
+  data = dict(request.POST)
+  print(data)
 
-
-# response['data'] = [{ 'player_name' : { 'value': "Keren"},
-#       "country_name": {"value": "Keren"},
-#       "positions": {"value": "Keren"},
-#       "image": { "value": "https://media.discordapp.net/attachments/876950446479126529/1054665731763077170/075474300_1599984513-LA_Lakers_Vs_Houston_Rockets_01-removebg-preview.png?width=303&height=30"}}
-#     ]
+  return render(request, 'search_result.html', {})
