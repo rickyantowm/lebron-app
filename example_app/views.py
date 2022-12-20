@@ -56,6 +56,19 @@ WHERE {
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
     response['data'] = results["results"]["bindings"]
+    response['search'] = search
+
+    print(search)
+    print(response['data'])
+    print(results)
 
 
     return render(request, 'search_result.html', response)
+
+
+
+# response['data'] = [{ 'player_name' : { 'value': "Keren"},
+#       "country_name": {"value": "Keren"},
+#       "positions": {"value": "Keren"},
+#       "image": { "value": "https://media.discordapp.net/attachments/876950446479126529/1054665731763077170/075474300_1599984513-LA_Lakers_Vs_Houston_Rockets_01-removebg-preview.png?width=303&height=30"}}
+#     ]
