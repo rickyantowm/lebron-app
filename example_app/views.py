@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 def index(request):
@@ -70,17 +70,26 @@ WHERE {
       "country_name": {"value": "Indonesia"},
       "team": {"value": "MU, Barcelona, Real Madrid"}, 'player_wiki_uri' : {'value': '<http://www.wikidata.org/entity/Q3714043>'}, 'entity_uri': {'value': '<http://127.0.0.1:8000/rdf-data/Dontonio+Wingfield>'}}
     ]
-
-    print(search)
-    print(response['data'])
-    print(results)
-
-
+    print("OK")
     return render(request, 'search_result.html', response)
 
-def get_player_detail(request):
-  print(request)
+def get_player_detail(request, wiki_uri, entity_uri):
   data = dict(request.POST)
-  print(data)
 
-  return render(request, 'search_result.html', {})
+  # uri wiki dan entity riil
+  wiki_uri = "<http://www.wikidata.org/entity/" + wiki_uri + ">"
+  entity_uri = "http://127.0.0.1:8000/rdf-data/" + entity_uri + ">"
+
+  # hard code
+  response = {}
+  response['data'] = [
+    {'player_name' : { 'value': "Michael Jordan"},
+      "country_name": {"value": "Indonesia"},
+      "team": {"value": "MU, Barcelona, Real Madrid"}, 
+      "image" : {"value" : "https://b.fssta.com/uploads/application/nba/headshots/1120.png"},
+      "wiki_uri" : {"value" : wiki_uri},
+      "entity_uri" : {"value" : entity_uri}
+      }
+  ]
+  
+  return render(request, 'player_detail.html', response)

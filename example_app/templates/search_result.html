@@ -1,46 +1,38 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
 <title>Search Result for {{ search }}</title>
 <script>
-      window.onload = function () {
-        var input = document.getElementById("input-box");
-        var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
-        var btnSubmit = document.getElementById("btn-submit");
-        var playerNames = [...document.getElementsByClassName("player-name")];
-        var url = window.location.href;
+  window.onload = function () {
+    var input = document.getElementById("input-box");
+    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+    var btnSubmit = document.getElementById("btn-submit");
+    var playerNames = [...document.getElementsByClassName("player-name")];
+    var url = window.location.href;
 
-        btnKeyword.forEach((btn) => {
-          btn.addEventListener("click", () => {
-            var data = btn.getAttribute("data-pk");
-            input.value = data;
-            btnSubmit.click();
-          });
-        });
+    btnKeyword.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var data = btn.getAttribute("data-pk");
+        input.value = data;
+        btnSubmit.click();
+      });
+    });
 
-        const csrf = document.getElementsByName("csrfmiddlewaretoken");
+    const csrf = document.getElementsByName("csrfmiddlewaretoken");
 
-        playerNames.forEach((player) => {
-          player.addEventListener("click", () => {
-            var player_wiki_uri = player.getAttribute("data-wiki");
-            var entity_uri = player.getAttribute("data-entity");
-            var data = {};
-            data["csrfmiddlewaretoken"] = csrf[0].value;
-            data["player_wiki_uri"] = player_wiki_uri
-            data["entity_uri"] = entity_uri
-
-            $.ajax({
-            type: "POST",
-            url: `${url}/detail`,
-            data: data,
-            success: function (response) {
-              console.log("success")
-            },
-            error: function (error) {
-              console.log(error);
-            },
-        });
-      })
-    })
-  }
+    playerNames.forEach((player) => {
+      player.addEventListener("click", () => {
+        var player_wiki_uri = player.getAttribute("data-wiki");
+        var entity_uri = player.getAttribute("data-entity");
+        var wiki_array = player_wiki_uri.split("/");
+        var entity_array = entity_uri.split("/");
+        player_wiki_uri = wiki_array.at(-1);
+        entity_uri = entity_array.at(-1);
+        player_wiki_uri = player_wiki_uri.slice(0, player_wiki_uri.length - 1);
+        entity_uri = entity_uri.slice(0, entity_uri.length - 1);
+        window.location.href =
+          url + "/player/" + player_wiki_uri + "/" + entity_uri;
+      });
+    });
+  };
 </script>
 <style>
   .main {
@@ -291,7 +283,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Tips Penelusuran
+        </h1>
         <button
           type="button"
           class="btn-close"
