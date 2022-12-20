@@ -144,7 +144,7 @@ def get_player_detail(request, wiki_uri, entity_uri):
           BIND (year(?time) AS ?year)}
     FILTER (lang(?award_name) = 'en')
   }
-  ORDER BY DESC(?year)                                                              
+  ORDER BY ASC(?year)                                                              
       }
     }
   }GROUP BY ?award_name ?count""" % (wiki_uri))
