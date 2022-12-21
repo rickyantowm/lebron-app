@@ -4,7 +4,7 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 namespace = "kb"
-sparql = SPARQLWrapper("http://${{ PUBLIC_IP }}:8889/bigdata/namespace/"+ namespace + "/sparql")
+sparql = SPARQLWrapper("http://34.83.124.76:8889/bigdata/namespace/"+ namespace + "/sparql")
 sparql.setReturnFormat(JSON)
 
 def index(request):
