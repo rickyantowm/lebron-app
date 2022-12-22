@@ -192,30 +192,32 @@ def get_detail_college(request, college_uri):
   prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> 
   PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-  SELECT ?label_univ ?univ_logo ?address ?postal_code ?official_web
+  SELECT ?label_univ ?univ_logo ?address ?student_count ?postal_code ?official_web
   WHERE {
     SERVICE <https://query.wikidata.org/sparql> {
       {
-  select ?label_univ ?univ_logo ?address ?postal_code ?official_web
+  select ?label_univ ?univ_logo ?address ?postal_code ?official_web ?student_count
   where {
     OPTIONAL {%s rdfs:label ?label_univ}
     OPTIONAL{%s wdt:P154 ?univ_logo }
     OPTIONAL{%s wdt:P6375 ?address }
     OPTIONAL{%s wdt:P1618 ?postal_code }
     OPTIONAL{%s wdt:P856 ?official_web }
+    OPTIONAL{%s wdt:P2196 ?student_count }
     FILTER (lang(?label_univ) = 'en')
 
   }                                                            
       }
     }
-  }""" % (wiki_uri, wiki_uri, wiki_uri, wiki_uri, wiki_uri))
+  }""" % (wiki_uri, wiki_uri, wiki_uri, wiki_uri, wiki_uri, wiki_uri))
 
   sparql.setReturnFormat(JSON)
   results = sparql.query().convert()
   #data = Tabel College
   response['data'] = results["results"]["bindings"]
+  response['search'] = response['data'][0]['label_univ']['value']
 
-  return render(request, response)
+  return render(request,"college_detail.html", response)
 
 def get_detail_team(request, team_uri):
   response = {}
@@ -253,5 +255,6 @@ def get_detail_team(request, team_uri):
   results = sparql.query().convert()
   #data = Tabel College
   response['data'] = results["results"]["bindings"]
+  response['search'] = response['data'][0]['label_team']['value']
 
-  return render(request, response)
+  return render(request, "team_detail.html", response)

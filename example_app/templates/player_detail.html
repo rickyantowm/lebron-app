@@ -8,6 +8,40 @@
     var playerNames = [...document.getElementsByClassName("player-name")];
     var url = window.location.href;
     var lebron = document.getElementById("lebron");
+    var college = document.getElementById("college_value");
+    var teams = [...document.getElementsByClassName("team_value")];
+
+    teams.forEach((team) => {
+      team.addEventListener("click", () => {
+        var data = team.getAttribute("data-uri");
+        data = data.split("/");
+        data = data.at(-1);
+        data = data.slice(0, data.length);
+        current_url = url.split("player");
+        current_url = current_url.at("0");
+
+        if (data.length == 0) {
+          $("#myModal").modal("show");
+        } else {
+          window.location.href = current_url + "team/" + data;
+        }
+      });
+    });
+
+    college.addEventListener("click", () => {
+      var data = college.getAttribute("data-uri");
+      data = data.split("/");
+      data = data.at(-1);
+      data = data.slice(0, data.length);
+      current_url = url.split("player");
+      current_url = current_url.at("0");
+
+      if (data.length == 0) {
+        $("#myModal").modal("show");
+      } else {
+        window.location.href = current_url + "college/" + data;
+      }
+    });
 
     lebron.addEventListener("click", () => {
       window.location.href = "https://lebron.up.railway.app/";
@@ -18,34 +52,6 @@
         var data = btn.getAttribute("data-pk");
         input.value = data;
         btnSubmit.click();
-      });
-    });
-
-    const csrf = document.getElementsByName("csrfmiddlewaretoken");
-
-    playerNames.forEach((player) => {
-      player.addEventListener("click", () => {
-        var player_wiki_uri = player.getAttribute("data-wiki");
-        var entity_uri = player.getAttribute("data-entity");
-        var data = {};
-        data["csrfmiddlewaretoken"] = csrf[0].value;
-        data["player_wiki_uri"] = player_wiki_uri;
-        data["entity_uri"] = entity_uri;
-
-        $.ajax({
-          type: "POST",
-          url: `${url}/detail`,
-          data: data,
-          success: function (response) {
-            console.log("success");
-            console.log(window.location.href);
-            window.location.href = url + "/detail";
-            console.log(window.location.href);
-          },
-          error: function (error) {
-            console.log(error);
-          },
-        });
       });
     });
   };
@@ -223,8 +229,14 @@
       <p>
         College:
         <a
-          style="font-weight: 600; text-decoration: none"
-          href="{{data4.0.college_iri.value}}"
+          style="
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            color: blue;
+          "
+          id="college_value"
+          data-uri="{{data4.0.college_iri.value}}"
           >{{data4.0.college_name.value}}</a
         >
       </p>
@@ -265,7 +277,20 @@
         <tr>
           <td>{{i.season_name.value}}</td>
           <td>{{i.age.value }}</td>
-          <td>{{i.team_name.value}}</td>
+          <!-- <td>{{i.team_name.value}}</td> -->
+          <td>
+            <a
+              style="
+                font-weight: 600;
+                text-decoration: none;
+                cursor: pointer;
+                color: blue;
+              "
+              class="team_value"
+              data-uri="{{i.team_iri.value}}"
+              >{{i.team_name.value}}</a
+            >
+          </td>
           <td>{{i.gp.value}}</td>
           <td>{{i.height.value | floatformat:2 }}</td>
           <td>{{i.weight.value | floatformat:2 }}</td>
@@ -305,4 +330,34 @@
   </div>
   {% endif %}
 </div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Error</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">No Data in Wikidata and Local</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
