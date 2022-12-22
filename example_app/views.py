@@ -176,3 +176,75 @@ def get_player_detail(request, wiki_uri, entity_uri):
   results = sparql.query().convert()
   response['data4'] = results["results"]["bindings"]
   return render(request, 'player_detail.html', response)
+
+def get_detail_college(request, college_uri):
+  response = {}
+  wiki_uri = "<http://www.wikidata.org/entity/" + college_uri + ">"
+
+  sparql.setQuery("""prefix :      <http://127.0.0.1:8000/rdf-data/> 
+  prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> 
+  PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+  SELECT ?label_univ ?univ_logo ?address ?postal_code ?official_web
+  WHERE {
+    SERVICE <https://query.wikidata.org/sparql> {
+      {
+  select ?label_univ ?univ_logo ?address ?postal_code ?official_web
+  where {
+    OPTIONAL {%s rdfs:label ?label_univ}
+    OPTIONAL{%s wdt:P154 ?univ_logo }
+    OPTIONAL{%s wdt:P6375 ?address }
+    OPTIONAL{%s wdt:P1618 ?postal_code }
+    OPTIONAL{%s wdt:P856 ?official_web }
+    FILTER (lang(?label_univ) = 'en')
+
+  }                                                            
+      }
+    }
+  }""" % (wiki_uri, wiki_uri, wiki_uri, wiki_uri, wiki_uri))
+
+  sparql.setReturnFormat(JSON)
+  results = sparql.query().convert()
+  #data = Tabel College
+  response['data'] = results["results"]["bindings"]
+
+  return render(request, response)
+
+def get_detail_team(request, team_uri):
+  response = {}
+  wiki_uri = "<http://www.wikidata.org/entity/" + team_uri + ">"
+
+  sparql.setQuery("""prefix :      <http://127.0.0.1:8000/rdf-data/> 
+  prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> 
+  PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+  SELECT ?label_team ?team_logo ?label_country ?label_head_coach ?label_home_venue
+  WHERE {
+    SERVICE <https://query.wikidata.org/sparql> {
+      {
+  select ?label_team ?team_logo ?label_country ?label_head_coach ?label_home_venue
+  where {
+    OPTIONAL {%s rdfs:label ?label_team}
+    OPTIONAL{%s wdt:P154 ?team_logo}
+    OPTIONAL{%s wdt:P17 ?country .
+    ?country rdfs:label ?label_country . }
+    OPTIONAL{%s wdt:P286 ?head_coach .
+    ?head_coach rdfs:label ?label_head_coach . }
+    OPTIONAL{%s wdt:P115 ?home_venue .
+    ?home_venue rdfs:label ?label_home_venue .}
+    FILTER (lang(?label_team) = 'en')
+    FILTER (lang(?label_country) = 'en')
+    FILTER (lang(?label_head_coach) = 'en')
+    FILTER (lang(?label_home_venue) = 'en')
+
+  }                                                            
+      }
+    }
+  }""" % (wiki_uri, wiki_uri, wiki_uri, wiki_uri, wiki_uri))
+
+  sparql.setReturnFormat(JSON)
+  results = sparql.query().convert()
+  #data = Tabel College
+  response['data'] = results["results"]["bindings"]
+
+  return render(request, response)
