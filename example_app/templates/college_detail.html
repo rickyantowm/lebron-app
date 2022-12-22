@@ -1,0 +1,213 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>Search Result for {{ search }}</title>
+<script>
+  window.onload = function () {
+    var input = document.getElementById("input-box");
+    var btnKeyword = [...document.getElementsByClassName("btn-keyword")];
+    var btnSubmit = document.getElementById("btn-submit");
+    var playerNames = [...document.getElementsByClassName("player-name")];
+    var url = window.location.href;
+    var lebron = document.getElementById("lebron");
+
+    lebron.addEventListener("click", () => {
+      window.location.href = "https://lebron.up.railway.app/";
+    });
+
+    btnKeyword.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        var data = btn.getAttribute("data-pk");
+        input.value = data;
+        btnSubmit.click();
+      });
+    });
+  };
+</script>
+<style>
+  .main {
+    width: 100%;
+  }
+
+  header {
+    border-bottom: 0.1px solid #ced4da;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 115px;
+    justify-content: center;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    gap: 3em;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-group,
+  .btn-group {
+    width: 100%;
+    height: 45px;
+  }
+
+  .form-group {
+    border-radius: 1em;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-group:hover {
+    box-shadow: 0 0 6px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control {
+    border-radius: 0;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    border-right: none;
+  }
+
+  .form-control:active,
+  .form-control:focus {
+    border-color: #ced4da;
+  }
+
+  .btn-submit {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: transparent;
+    border-color: #ced4da !important;
+    border-left: none;
+  }
+
+  .btn-submit:hover {
+    background-color: transparent !important;
+  }
+
+  .btn-submit img {
+    width: 30px;
+    height: 30px;
+  }
+
+  p {
+    margin-bottom: 7px;
+  }
+</style>
+{% endblock meta %} {% block content %}
+<header>
+  <div class="container">
+    <div class="header">
+      <form action="{% url 'search_result' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic outlined example"
+          >
+            <input
+              type="text"
+              name="search"
+              class="form-control shadow-none"
+              placeholder="Search your favorite player!"
+              id="input-box"
+              value="{{search}}"
+            />
+            <button
+              id="btn-submit"
+              type="submit"
+              class="btn btn-primary btn-submit"
+            >
+              <img
+                src="https://media.discordapp.net/attachments/876950446479126529/1054644214333460510/loupe_1.png?width=51&height=51"
+                alt="search-icon"
+              />
+            </button>
+          </div>
+        </div>
+      </form>
+      <h1
+        style="display: flex; cursor: pointer; gap: 3px; align-items: center"
+        id="lebron"
+      >
+        <span style="color: #4385f6">L</span>
+        <span style="color: #ed3f37">e</span>
+        <span style="color: #f1ba17">b</span>
+        <span style="color: #34a855">r</span>
+        <span>
+          <img
+            src="https://media.discordapp.net/attachments/876950446479126529/1054645127873826896/S__20004900-removebg-preview-1.png?width=256&height=431"
+            alt="Player Photo"
+            height="50px"
+        /></span>
+        <span style="color: #ed3f37">n</span>
+      </h1>
+    </div>
+    <div style="padding: 0 10px">
+      <p style="border-bottom: 2.5px solid #4385f6; width: fit-content">
+        Semua
+      </p>
+    </div>
+  </div>
+</header>
+<div class="container search-result">
+  <div style="display: flex; gap: 25px; margin-top: 20px">
+    <div class="right">
+      {% if data.0.univ_logo.value|length > 0 %}
+      <img
+        alt="college-foto"
+        style="
+          width: 250px;
+          height: 250px;
+          object-fit: contain;
+          border-radius: 0.7em;
+          box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.1);
+        "
+        src="{{data.0.univ_logo.value}}"
+      />
+      {% else %}
+      <img
+        alt="player-foto"
+        style="
+          width: 250px;
+          height: 250px;
+          object-fit: cover;
+          border-radius: 0.7em;
+          box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.1);
+        "
+        src="https://media.discordapp.net/attachments/827827671991582730/1050115537843261581/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.png?width=656&height=656"
+      />
+      {% endif %}
+    </div>
+    <div class="left">
+      {% if data.0.label_univ.value|length > 0 %}
+      <h5>{{data.0.label_univ.value}}</h5>
+      {% else %}
+      <h5>Name not found</h5>
+      {% endif %} {% if data.0.official_web.value|length > 0%}
+      <p>
+        Official Web Page:
+        <a
+          style="
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            color: blue;
+          "
+          href="{{data.0.official_web.value}}"
+          >{{data.0.official_web.value}}</a
+        >
+      </p>
+      {% endif%} {% if data.0.address.value|length > 0%}
+      <p>Address: {{data.0.address.value}}</p>
+      {% endif%} {% if data.0.student_count.value|length > 0%}
+      <p>Student Count: {{data.0.student_count.value}}</p>
+      {% endif%}
+    </div>
+  </div>
+</div>
+{% endblock content %}
