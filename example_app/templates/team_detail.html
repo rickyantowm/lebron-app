@@ -193,19 +193,7 @@
       {% endif%} {% if data.0.label_home_venue.value|length > 0%}
       <p>Home Venue: {{data.0.label_home_venue.value}}</p>
       {% endif%} {% if data.0.label_country.value|length > 0%}
-      <p>
-        Country:
-        <a
-          style="
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            color: blue;
-          "
-          href="{{data.0.label_country.value}}"
-          >{{data.0.label_country.value}}</a
-        >
-      </p>
+      <p>Country: {{data.0.label_country.value}}</p>
       {% endif%}
     </div>
   </div>
