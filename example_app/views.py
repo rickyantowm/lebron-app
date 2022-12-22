@@ -22,6 +22,7 @@ def search_result(request):
   SELECT DISTINCT ?entity_uri ?player_name ?country_name ?player_wiki_uri (group_concat(distinct ?team_name;separator=", ") as ?teams)
   WHERE{
       ?entity_uri rdfs:label ?player_name .
+      ?entity_uri rdf:type :BasketballPlayer .
       FILTER contains(LCASE(?player_name),"%s")
       ?entity_uri :season ?seasons .
     ?seasons :hasTeam ?team .
@@ -71,6 +72,11 @@ def search_result(request):
 
 def get_player_detail(request, wiki_uri, entity_uri):
   response = {}
+  player = entity_uri.split("+")
+  search = ""
+  for i in player:
+    search += i + " "
+  search = search[0:len(search)]
   wiki_uri = "<http://www.wikidata.org/entity/" + wiki_uri + ">"
   entity_uri = "<http://127.0.0.1:8000/rdf-data/" + entity_uri + ">"
 
@@ -175,4 +181,5 @@ def get_player_detail(request, wiki_uri, entity_uri):
 
   results = sparql.query().convert()
   response['data4'] = results["results"]["bindings"]
+  response['search'] = search
   return render(request, 'player_detail.html', response)
