@@ -3,7 +3,7 @@
 Semantic Web
 
 Deployment Link
-https://web-production-4519.up.railway.app/
+https://lebron.up.railway.app/
 ## Cara Menggunakan
 
 Apabila kamu ingin menggunakan repositori ini sebagai repositori awalan yang nantinya akan kamu modifikasi:
