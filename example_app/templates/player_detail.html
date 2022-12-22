@@ -191,7 +191,7 @@
         style="
           width: 200px;
           height: 250px;
-          object-fit: cover;
+          object-fit: contain;
           border-radius: 0.7em;
           box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.1);
         "
@@ -212,34 +212,28 @@
       {% endif %}
     </div>
     <div class="left">
-      {% if data2|length > 0 %}
-      <div>
-        <h5>{{data4.0.player_name.value}}</h5>
-        {% if data2.0.nickname.value|length > 0%}
-        <p>Nickname: {{data2.0.nickname.value}}</p>
-        {% endif%} {% if data2.0.positions.value|length > 0%}
-        <p>Position: {{data2.0.positions.value}}</p>
-        {% endif%} {% if data2.0.jersey_number.value|length > 0 %}
-        <p>Jersey Number: {{data2.0.jersey_number.value}}</p>
-        {% endif%} {% if data4.0.college_name.value|length > 0%}
-        <p>
-          College:
-          <a
-            style="font-weight: 600; text-decoration: none"
-            href="{{data4.0.college_iri.value}}"
-            >{{data4.0.college_name.value}}</a
-          >
-        </p>
-        {% endif%} {% if data4.0.draft_number.value|length > 0 %}
-        <p>Draft Number: {{data4.0.draft_number.value}}</p>
-        {% endif%} {% if data4.0.draft_round.value|length > 0 %}
-        <p>Draft Round: {{data4.0.draft_round.value}}</p>
-        {% endif%} {% if data4.0.draft_year.value|length > 0 %}
-        <p>Draft Year: {{data4.0.draft_year.value}}</p>
-        {% endif%}
-      </div>
-      {% else %}
-      <h5>Player's Data Not Found</h5>
+      <h5>{{data4.0.player_name.value}}</h5>
+      {% if data2.0.nickname.value|length > 0%}
+      <p>Nickname: {{data2.0.nickname.value}}</p>
+      {% endif%} {% if data2.0.positions.value|length > 0%}
+      <p>Position: {{data2.0.positions.value}}</p>
+      {% endif%} {% if data2.0.jersey_number.value|length > 0 %}
+      <p>Jersey Number: {{data2.0.jersey_number.value}}</p>
+      {% endif%} {% if data4.0.college_name.value|length > 0%}
+      <p>
+        College:
+        <a
+          style="font-weight: 600; text-decoration: none"
+          href="{{data4.0.college_iri.value}}"
+          >{{data4.0.college_name.value}}</a
+        >
+      </p>
+      {% endif%} {% if data4.0.draft_number.value|length > 0 %}
+      <p>Draft Number: {{data4.0.draft_number.value}}</p>
+      {% endif%} {% if data4.0.draft_round.value|length > 0 %}
+      <p>Draft Round: {{data4.0.draft_round.value}}</p>
+      {% endif%} {% if data4.0.draft_year.value|length > 0 %}
+      <p>Draft Year: {{data4.0.draft_year.value}}</p>
       {% endif %}
     </div>
   </div>

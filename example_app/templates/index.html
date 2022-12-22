@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block meta %}
-<title>Hello, world!</title>
+<title>Lebron Search Engine</title>
 <script>
   window.onload = function () {
     var lebron = document.getElementById("lebron");
@@ -89,6 +89,12 @@
   .btn-submit img {
     width: 30px;
     height: 30px;
+  }
+
+  @media screen and (max-width: 600px) {
+    form {
+      width: 80%;
+    }
   }
 </style>
 {% endblock meta %} {% block content %}

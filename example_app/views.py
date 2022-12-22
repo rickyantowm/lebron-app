@@ -58,6 +58,12 @@ def search_result(request):
     sorted_aa = sorted(aa.items(), key=lambda x:x[1], reverse=True)
     if len(sorted_aa) > 5:
       sorted_aa = sorted_aa[0:5]
+
+    for i in range(0, len(sorted_aa)):
+      for j in sorted_aa[i]:
+        if (type(j) == str):
+          sorted_aa[i] = j
+
     response['similar'] = sorted_aa
   
   response['search'] = request.POST['search']

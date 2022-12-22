@@ -253,9 +253,7 @@
           {%for x in similar%}
           <a
             class="btn btn-keyword"
-            {%for j in x%}
-            data-pk="{{j}}"
-            {% endfor %}
+            data-pk="{{x}}"
             style="background-color: #00000022; border-radius: 0.6em"
             >{{x}}</a
           >
